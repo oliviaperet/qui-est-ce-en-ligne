@@ -64,22 +64,29 @@ export async function sendChatMessage(
   if (error) throw error;
 }
 
+// Each player keeps one independent elimination board per opponent (aboutPlayerId),
+// since different opponents can answer the same question differently.
 export async function toggleBoardMark(
   supabase: DB,
   playerId: string,
+  aboutPlayerId: string,
   characterId: string,
   marked: boolean
 ) {
   if (marked) {
-    const { error } = await supabase
-      .from("board_marks")
-      .upsert({ player_id: playerId, character_id: characterId, marked: true });
+    const { error } = await supabase.from("board_marks").upsert({
+      player_id: playerId,
+      about_player_id: aboutPlayerId,
+      character_id: characterId,
+      marked: true,
+    });
     if (error) throw error;
   } else {
     const { error } = await supabase
       .from("board_marks")
       .delete()
       .eq("player_id", playerId)
+      .eq("about_player_id", aboutPlayerId)
       .eq("character_id", characterId);
     if (error) throw error;
   }

@@ -25,7 +25,8 @@ export function GameActive({
   myPlayer,
   identitiesByPlayerId,
   targetsByPlayerId,
-  myMarkedCharacterIds,
+  myMarksByAboutPlayerId,
+  refetch,
 }: {
   supabase: SupabaseClient<Database>;
   room: Room;
@@ -35,16 +36,22 @@ export function GameActive({
   myPlayer: Player;
   identitiesByPlayerId: Record<string, string>;
   targetsByPlayerId: Record<string, string>;
-  myMarkedCharacterIds: Set<string>;
+  myMarksByAboutPlayerId: Record<string, Set<string>>;
+  refetch: () => void;
 }) {
   const [questionDraft, setQuestionDraft] = useState("");
   const [guessMode, setGuessMode] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBoardPlayerId, setSelectedBoardPlayerId] = useState<string | null>(null);
 
   const playersById = useMemo(
     () => Object.fromEntries(players.map((p) => [p.id, p])),
     [players]
+  );
+  const otherPlayers = useMemo(
+    () => players.filter((p) => p.id !== myPlayer.id),
+    [players, myPlayer.id]
   );
 
   const isFinalRound = room.turn_phase === "final_round";
@@ -58,6 +65,11 @@ export function GameActive({
     : undefined;
   const myTargetPlayerId = targetsByPlayerId[myPlayer.id];
   const myTargetName = myTargetPlayerId ? playersById[myTargetPlayerId]?.name : undefined;
+
+  const boardPlayerId = selectedBoardPlayerId ?? myTargetPlayerId ?? otherPlayers[0]?.id ?? null;
+  const boardMarkedCharacterIds = boardPlayerId
+    ? myMarksByAboutPlayerId[boardPlayerId] ?? new Set<string>()
+    : new Set<string>();
 
   const haveIAnswered = messages.some(
     (m) =>
@@ -89,8 +101,10 @@ export function GameActive({
   }
 
   async function handleToggleMark(characterId: string) {
-    const marked = myMarkedCharacterIds.has(characterId);
-    await toggleBoardMark(supabase, myPlayer.id, characterId, !marked);
+    if (!boardPlayerId) return;
+    const marked = boardMarkedCharacterIds.has(characterId);
+    await toggleBoardMark(supabase, myPlayer.id, boardPlayerId, characterId, !marked);
+    refetch();
   }
 
   const actorName = activeActorId ? playersById[activeActorId]?.name : undefined;
@@ -266,7 +280,7 @@ export function GameActive({
           </section>
 
           <section className="game-card border-blue p-4">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-black text-blue-dark">Ton plateau</h2>
               {room.turn_phase === "eliminate" && isMyTurn && (
                 <button
@@ -279,12 +293,32 @@ export function GameActive({
                 </button>
               )}
             </div>
+            <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-dark/50">
+              Un plateau indépendant par adversaire à démasquer :
+            </p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {otherPlayers.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSelectedBoardPlayerId(p.id)}
+                  className={`rounded-full border-2 px-3 py-1 text-sm font-black transition ${
+                    boardPlayerId === p.id
+                      ? "border-blue bg-blue text-white"
+                      : "border-blue-tint bg-white text-blue-dark"
+                  }`}
+                >
+                  {p.name}
+                  {p.id === myTargetPlayerId ? " 🎯" : ""}
+                </button>
+              ))}
+            </div>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
               {characters.map((c) => (
                 <CharacterThumb
                   key={c.id}
                   character={c}
-                  crossedOut={myMarkedCharacterIds.has(c.id)}
+                  crossedOut={boardMarkedCharacterIds.has(c.id)}
                   highlighted={c.id === myIdentityCharacterId}
                   onToggleEliminate={() => handleToggleMark(c.id)}
                 />

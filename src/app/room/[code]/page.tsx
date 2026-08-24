@@ -38,8 +38,9 @@ export default function RoomPage() {
     messages,
     identitiesByPlayerId,
     targetsByPlayerId,
-    myMarkedCharacterIds,
+    myMarksByAboutPlayerId,
     supabase,
+    refetch,
   } = useRoomState(identity?.roomId ?? null, identity?.playerId ?? null);
 
   useEffect(() => {
@@ -98,7 +99,8 @@ export default function RoomPage() {
         myPlayer={myPlayer}
         identitiesByPlayerId={identitiesByPlayerId}
         targetsByPlayerId={targetsByPlayerId}
-        myMarkedCharacterIds={myMarkedCharacterIds}
+        myMarksByAboutPlayerId={myMarksByAboutPlayerId}
+        refetch={refetch}
       />
     );
   }

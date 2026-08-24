@@ -21,7 +21,8 @@ export type RoomState = {
   identitiesByPlayerId: Record<string, string>;
   // Same visibility rule as identities: my own target, or everyone once finished.
   targetsByPlayerId: Record<string, string>;
-  myMarkedCharacterIds: Set<string>;
+  // One independent elimination board per opponent: aboutPlayerId -> marked character ids.
+  myMarksByAboutPlayerId: Record<string, Set<string>>;
 };
 
 const initialState: RoomState = {
@@ -33,7 +34,7 @@ const initialState: RoomState = {
   messages: [],
   identitiesByPlayerId: {},
   targetsByPlayerId: {},
-  myMarkedCharacterIds: new Set(),
+  myMarksByAboutPlayerId: {},
 };
 
 export function useRoomState(roomId: string | null, myPlayerId: string | null) {
@@ -71,13 +72,15 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
       targetsByPlayerId[row.player_id] = row.target_player_id;
     }
 
-    let myMarkedCharacterIds = new Set<string>();
+    const myMarksByAboutPlayerId: Record<string, Set<string>> = {};
     if (myPlayerId) {
       const marksRes = await supabase
         .from("board_marks")
-        .select("character_id")
+        .select("character_id, about_player_id")
         .eq("player_id", myPlayerId);
-      myMarkedCharacterIds = new Set((marksRes.data ?? []).map((m) => m.character_id));
+      for (const row of marksRes.data ?? []) {
+        (myMarksByAboutPlayerId[row.about_player_id] ??= new Set()).add(row.character_id);
+      }
     }
 
     setState({
@@ -89,7 +92,7 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
       messages: messagesRes.data ?? [],
       identitiesByPlayerId,
       targetsByPlayerId,
-      myMarkedCharacterIds,
+      myMarksByAboutPlayerId,
     });
   }, [roomId, myPlayerId, supabase]);
 

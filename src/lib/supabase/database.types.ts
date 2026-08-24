@@ -14,21 +14,31 @@ export type Database = {
     Tables: {
       board_marks: {
         Row: {
+          about_player_id: string
           character_id: string
           marked: boolean
           player_id: string
         }
         Insert: {
+          about_player_id: string
           character_id: string
           marked?: boolean
           player_id: string
         }
         Update: {
+          about_player_id?: string
           character_id?: string
           marked?: boolean
           player_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "board_marks_about_player_id_fkey"
+            columns: ["about_player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "board_marks_character_id_fkey"
             columns: ["character_id"]
