@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fef1f7;
+  --foreground: #241536;
+  --card-bg: #ffffff;
+  --pink: #ec2f8c;
+  --pink-dark: #c4157a;
+  --pink-tint: #ffe1f1;
+  --blue: #2f8cf0;
+  --blue-dark: #1a63c4;
+  --blue-tint: #dcedff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-pink: var(--pink);
+  --color-pink-dark: var(--pink-dark);
+  --color-pink-tint: var(--pink-tint);
+  --color-blue: var(--blue);
+  --color-blue-dark: var(--blue-dark);
+  --color-blue-tint: var(--blue-tint);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.game-card {
+  border-radius: 1.25rem;
+  border-width: 3px;
+  border-color: var(--blue);
+  background: var(--card-bg);
+  box-shadow: 0 4px 0 var(--blue);
 }
