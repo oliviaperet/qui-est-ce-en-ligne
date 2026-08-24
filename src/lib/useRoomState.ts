@@ -19,8 +19,9 @@ export type RoomState = {
   // Only ever contains rows visible under RLS: my own identity, plus everyone
   // once the game has finished (the reveal screen).
   identitiesByPlayerId: Record<string, string>;
-  // Same visibility rule as identities: my own target, or everyone once finished.
-  targetsByPlayerId: Record<string, string>;
+  // Same visibility rule: playerId -> set of opponent ids they've correctly
+  // unmasked. Only ever contains my own row pre-finish, everyone once finished.
+  solvesByPlayerId: Record<string, Set<string>>;
   // One independent elimination board per opponent: aboutPlayerId -> marked character ids.
   myMarksByAboutPlayerId: Record<string, Set<string>>;
 };
@@ -33,7 +34,7 @@ const initialState: RoomState = {
   characters: [],
   messages: [],
   identitiesByPlayerId: {},
-  targetsByPlayerId: {},
+  solvesByPlayerId: {},
   myMarksByAboutPlayerId: {},
 };
 
@@ -43,7 +44,7 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
 
   const refetch = useCallback(async () => {
     if (!roomId) return;
-    const [roomRes, playersRes, charactersRes, messagesRes, identitiesRes, targetsRes] =
+    const [roomRes, playersRes, charactersRes, messagesRes, identitiesRes, solvesRes] =
       await Promise.all([
         supabase.from("rooms").select("*").eq("id", roomId).maybeSingle(),
         supabase.from("players").select("*").eq("room_id", roomId).order("joined_at"),
@@ -54,11 +55,11 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
           .from("player_identities")
           .select("player_id, character_id, players!inner(room_id)")
           .eq("players.room_id", roomId),
-        // player_targets has two FKs to players (player_id and target_player_id),
+        // player_solves has two FKs to players (player_id and solved_player_id),
         // so the embed must name which relationship to join through.
         supabase
-          .from("player_targets")
-          .select("player_id, target_player_id, players!player_targets_player_id_fkey!inner(room_id)")
+          .from("player_solves")
+          .select("player_id, solved_player_id, players!player_solves_player_id_fkey!inner(room_id)")
           .eq("players.room_id", roomId),
       ]);
 
@@ -67,9 +68,9 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
       identitiesByPlayerId[row.player_id] = row.character_id;
     }
 
-    const targetsByPlayerId: Record<string, string> = {};
-    for (const row of targetsRes.data ?? []) {
-      targetsByPlayerId[row.player_id] = row.target_player_id;
+    const solvesByPlayerId: Record<string, Set<string>> = {};
+    for (const row of solvesRes.data ?? []) {
+      (solvesByPlayerId[row.player_id] ??= new Set()).add(row.solved_player_id);
     }
 
     const myMarksByAboutPlayerId: Record<string, Set<string>> = {};
@@ -91,7 +92,7 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
       characters: charactersRes.data ?? [],
       messages: messagesRes.data ?? [],
       identitiesByPlayerId,
-      targetsByPlayerId,
+      solvesByPlayerId,
       myMarksByAboutPlayerId,
     });
   }, [roomId, myPlayerId, supabase]);

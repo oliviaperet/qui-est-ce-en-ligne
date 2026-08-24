@@ -24,7 +24,7 @@ export function GameActive({
   messages,
   myPlayer,
   identitiesByPlayerId,
-  targetsByPlayerId,
+  solvesByPlayerId,
   myMarksByAboutPlayerId,
   refetch,
 }: {
@@ -35,7 +35,7 @@ export function GameActive({
   messages: Message[];
   myPlayer: Player;
   identitiesByPlayerId: Record<string, string>;
-  targetsByPlayerId: Record<string, string>;
+  solvesByPlayerId: Record<string, Set<string>>;
   myMarksByAboutPlayerId: Record<string, Set<string>>;
   refetch: () => void;
 }) {
@@ -53,6 +53,7 @@ export function GameActive({
     () => players.filter((p) => p.id !== myPlayer.id),
     [players, myPlayer.id]
   );
+  const mySolvedPlayerIds = solvesByPlayerId[myPlayer.id] ?? new Set<string>();
 
   const isFinalRound = room.turn_phase === "final_round";
   const currentTurnPlayerId = room.turn_order?.[room.current_turn_index] ?? null;
@@ -63,10 +64,9 @@ export function GameActive({
   const myIdentityCharacter = myIdentityCharacterId
     ? characters.find((c) => c.id === myIdentityCharacterId)
     : undefined;
-  const myTargetPlayerId = targetsByPlayerId[myPlayer.id];
-  const myTargetName = myTargetPlayerId ? playersById[myTargetPlayerId]?.name : undefined;
 
-  const boardPlayerId = selectedBoardPlayerId ?? myTargetPlayerId ?? otherPlayers[0]?.id ?? null;
+  const boardPlayerId = selectedBoardPlayerId ?? otherPlayers[0]?.id ?? null;
+  const boardPlayerName = boardPlayerId ? playersById[boardPlayerId]?.name : undefined;
   const boardMarkedCharacterIds = boardPlayerId
     ? myMarksByAboutPlayerId[boardPlayerId] ?? new Set<string>()
     : new Set<string>();
@@ -94,8 +94,9 @@ export function GameActive({
   }
 
   async function handleGuess(characterId: string) {
+    if (!boardPlayerId) return;
     await run(async () => {
-      await submitGuess(supabase, room.id, characterId);
+      await submitGuess(supabase, room.id, boardPlayerId, characterId);
       setGuessMode(false);
     });
   }
@@ -108,6 +109,26 @@ export function GameActive({
   }
 
   const actorName = activeActorId ? playersById[activeActorId]?.name : undefined;
+
+  const opponentTabs = (
+    <div className="flex flex-wrap gap-2">
+      {otherPlayers.map((p) => (
+        <button
+          key={p.id}
+          type="button"
+          onClick={() => setSelectedBoardPlayerId(p.id)}
+          className={`rounded-full border-2 px-3 py-1 text-sm font-black transition ${
+            boardPlayerId === p.id
+              ? "border-blue bg-blue text-white"
+              : "border-blue-tint bg-white text-blue-dark"
+          }`}
+        >
+          {p.name}
+          {mySolvedPlayerIds.has(p.id) ? " ✓" : ""}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-4 py-6">
@@ -129,15 +150,24 @@ export function GameActive({
           </div>
           <div className="border-l-2 border-pink-tint pl-3">
             <p className="text-xs font-bold uppercase tracking-wide text-pink-dark/70">
-              Ta cible à démasquer
+              Adversaires démasqués
             </p>
-            <p className="font-black text-pink-dark">{myTargetName ?? "…"}</p>
+            <p className="font-black text-pink-dark">
+              {mySolvedPlayerIds.size} / {otherPlayers.length}
+            </p>
           </div>
         </div>
         <p className="rounded-full bg-pink px-4 py-1.5 text-sm font-black text-white">
           {isFinalRound && "⚡ Tour final — "}
           {isMyTurn ? "C'est ton tour !" : `Au tour de ${actorName ?? "…"}`}
         </p>
+      </div>
+
+      <div className="game-card border-blue p-3">
+        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-dark/50">
+          Adversaire sélectionné (plateau affiché ci-dessous, et cible si tu devines) :
+        </p>
+        {opponentTabs}
       </div>
 
       <div className="grid flex-1 gap-4 lg:grid-cols-[1fr_320px]">
@@ -148,7 +178,7 @@ export function GameActive({
                 guessMode ? (
                   <div className="flex flex-col gap-3">
                     <p className="text-center text-sm font-bold text-pink-dark">
-                      Tu penses savoir qui est {myTargetName} ? Choisis son personnage :
+                      Tu penses savoir qui est {boardPlayerName} ? Choisis son personnage :
                     </p>
                     <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
                       {characters.map((c) => (
@@ -197,9 +227,10 @@ export function GameActive({
                     <button
                       type="button"
                       onClick={() => setGuessMode(true)}
-                      className="self-center rounded-full bg-pink px-5 py-2 text-sm font-black text-white shadow-[0_3px_0_var(--pink-dark)]"
+                      disabled={!boardPlayerId}
+                      className="self-center rounded-full bg-pink px-5 py-2 text-sm font-black text-white shadow-[0_3px_0_var(--pink-dark)] disabled:opacity-40"
                     >
-                      🎯 Deviner qui est {myTargetName}
+                      🎯 Deviner qui est {boardPlayerName}
                     </button>
                   </div>
                 )
@@ -262,7 +293,7 @@ export function GameActive({
               (isMyTurn ? (
                 <div className="flex flex-col gap-3">
                   <p className="text-center text-sm font-black text-pink-dark">
-                    ⚡ Dernière chance ! Devine qui est {myTargetName}.
+                    ⚡ Dernière chance ! Devine qui est {boardPlayerName}.
                   </p>
                   <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
                     {characters.map((c) => (
@@ -281,7 +312,9 @@ export function GameActive({
 
           <section className="game-card border-blue p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-              <h2 className="font-black text-blue-dark">Ton plateau</h2>
+              <h2 className="font-black text-blue-dark">
+                Plateau pour démasquer {boardPlayerName ?? "…"}
+              </h2>
               {room.turn_phase === "eliminate" && isMyTurn && (
                 <button
                   type="button"
@@ -292,26 +325,6 @@ export function GameActive({
                   Terminer mon tour
                 </button>
               )}
-            </div>
-            <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-dark/50">
-              Un plateau indépendant par adversaire à démasquer :
-            </p>
-            <div className="mb-3 flex flex-wrap gap-2">
-              {otherPlayers.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setSelectedBoardPlayerId(p.id)}
-                  className={`rounded-full border-2 px-3 py-1 text-sm font-black transition ${
-                    boardPlayerId === p.id
-                      ? "border-blue bg-blue text-white"
-                      : "border-blue-tint bg-white text-blue-dark"
-                  }`}
-                >
-                  {p.name}
-                  {p.id === myTargetPlayerId ? " 🎯" : ""}
-                </button>
-              ))}
             </div>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
               {characters.map((c) => (

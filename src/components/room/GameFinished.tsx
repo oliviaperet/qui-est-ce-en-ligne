@@ -16,7 +16,7 @@ export function GameFinished({
   messages,
   myPlayer,
   identitiesByPlayerId,
-  targetsByPlayerId,
+  solvesByPlayerId,
 }: {
   supabase: SupabaseClient<Database>;
   room: Room;
@@ -25,7 +25,7 @@ export function GameFinished({
   messages: Message[];
   myPlayer: Player;
   identitiesByPlayerId: Record<string, string>;
-  targetsByPlayerId: Record<string, string>;
+  solvesByPlayerId: Record<string, Set<string>>;
 }) {
   const [restarting, setRestarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,11 +81,13 @@ export function GameFinished({
       </div>
 
       <section className="game-card border-blue p-4">
-        <h2 className="mb-3 font-black text-blue-dark">Toutes les identités et cibles</h2>
+        <h2 className="mb-3 font-black text-blue-dark">Toutes les identités</h2>
         <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {players.map((p) => {
             const character = charactersById[identitiesByPlayerId[p.id]];
-            const target = playersById[targetsByPlayerId[p.id]];
+            const solved = [...(solvesByPlayerId[p.id] ?? [])]
+              .map((id) => playersById[id]?.name)
+              .filter(Boolean);
             const isWinner = winnerIds.includes(p.id);
             return (
               <li
@@ -105,10 +107,10 @@ export function GameFinished({
                 <span>
                   <span className="font-bold">{p.name}</span> était{" "}
                   <span className="font-bold text-pink-dark">{character?.name ?? "?"}</span>
-                  {target && (
+                  {solved.length > 0 && (
                     <>
                       {" "}
-                      · devait deviner <span className="font-bold">{target.name}</span>
+                      · a démasqué <span className="font-bold">{solved.join(", ")}</span>
                     </>
                   )}
                 </span>

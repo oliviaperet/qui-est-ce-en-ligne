@@ -30,9 +30,15 @@ export async function submitAnswer(supabase: DB, roomId: string, answer: boolean
   if (error) throw error;
 }
 
-export async function submitGuess(supabase: DB, roomId: string, characterId: string) {
+export async function submitGuess(
+  supabase: DB,
+  roomId: string,
+  targetPlayerId: string,
+  characterId: string
+) {
   const { data, error } = await supabase.rpc("submit_guess", {
     p_room_id: roomId,
+    p_target_player_id: targetPlayerId,
     p_character_id: characterId,
   });
   if (error) throw error;

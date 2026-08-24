@@ -162,30 +162,33 @@ export type Database = {
           },
         ]
       }
-      player_targets: {
+      player_solves: {
         Row: {
           player_id: string
-          target_player_id: string
+          solved_at: string
+          solved_player_id: string
         }
         Insert: {
           player_id: string
-          target_player_id: string
+          solved_at?: string
+          solved_player_id: string
         }
         Update: {
           player_id?: string
-          target_player_id?: string
+          solved_at?: string
+          solved_player_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "player_targets_player_id_fkey"
+            foreignKeyName: "player_solves_player_id_fkey"
             columns: ["player_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "player_targets_target_player_id_fkey"
-            columns: ["target_player_id"]
+            foreignKeyName: "player_solves_solved_player_id_fkey"
+            columns: ["solved_player_id"]
             isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
@@ -311,7 +314,11 @@ export type Database = {
         Returns: undefined
       }
       submit_guess: {
-        Args: { p_character_id: string; p_room_id: string }
+        Args: {
+          p_character_id: string
+          p_room_id: string
+          p_target_player_id: string
+        }
         Returns: boolean
       }
     }

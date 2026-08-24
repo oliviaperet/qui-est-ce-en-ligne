@@ -37,7 +37,7 @@ export default function RoomPage() {
     characters,
     messages,
     identitiesByPlayerId,
-    targetsByPlayerId,
+    solvesByPlayerId,
     myMarksByAboutPlayerId,
     supabase,
     refetch,
@@ -98,7 +98,7 @@ export default function RoomPage() {
         messages={messages}
         myPlayer={myPlayer}
         identitiesByPlayerId={identitiesByPlayerId}
-        targetsByPlayerId={targetsByPlayerId}
+        solvesByPlayerId={solvesByPlayerId}
         myMarksByAboutPlayerId={myMarksByAboutPlayerId}
         refetch={refetch}
       />
@@ -114,7 +114,7 @@ export default function RoomPage() {
       messages={messages}
       myPlayer={myPlayer}
       identitiesByPlayerId={identitiesByPlayerId}
-      targetsByPlayerId={targetsByPlayerId}
+      solvesByPlayerId={solvesByPlayerId}
     />
   );
 }
