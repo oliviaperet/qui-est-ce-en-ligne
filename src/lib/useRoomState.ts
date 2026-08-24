@@ -53,9 +53,11 @@ export function useRoomState(roomId: string | null, myPlayerId: string | null) {
           .from("player_identities")
           .select("player_id, character_id, players!inner(room_id)")
           .eq("players.room_id", roomId),
+        // player_targets has two FKs to players (player_id and target_player_id),
+        // so the embed must name which relationship to join through.
         supabase
           .from("player_targets")
-          .select("player_id, target_player_id, players!inner(room_id)")
+          .select("player_id, target_player_id, players!player_targets_player_id_fkey!inner(room_id)")
           .eq("players.room_id", roomId),
       ]);
 
