@@ -97,6 +97,7 @@ export default function RoomPage() {
         messages={messages}
         myPlayer={myPlayer}
         identitiesByPlayerId={identitiesByPlayerId}
+        targetsByPlayerId={targetsByPlayerId}
         myMarkedCharacterIds={myMarkedCharacterIds}
       />
     );

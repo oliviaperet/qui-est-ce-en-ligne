@@ -24,6 +24,7 @@ export function GameActive({
   messages,
   myPlayer,
   identitiesByPlayerId,
+  targetsByPlayerId,
   myMarkedCharacterIds,
 }: {
   supabase: SupabaseClient<Database>;
@@ -33,6 +34,7 @@ export function GameActive({
   messages: Message[];
   myPlayer: Player;
   identitiesByPlayerId: Record<string, string>;
+  targetsByPlayerId: Record<string, string>;
   myMarkedCharacterIds: Set<string>;
 }) {
   const [questionDraft, setQuestionDraft] = useState("");
@@ -54,6 +56,8 @@ export function GameActive({
   const myIdentityCharacter = myIdentityCharacterId
     ? characters.find((c) => c.id === myIdentityCharacterId)
     : undefined;
+  const myTargetPlayerId = targetsByPlayerId[myPlayer.id];
+  const myTargetName = myTargetPlayerId ? playersById[myTargetPlayerId]?.name : undefined;
 
   const haveIAnswered = messages.some(
     (m) =>
@@ -109,6 +113,12 @@ export function GameActive({
             </p>
             <p className="font-black text-blue-dark">{myIdentityCharacter?.name ?? "…"}</p>
           </div>
+          <div className="border-l-2 border-pink-tint pl-3">
+            <p className="text-xs font-bold uppercase tracking-wide text-pink-dark/70">
+              Ta cible à démasquer
+            </p>
+            <p className="font-black text-pink-dark">{myTargetName ?? "…"}</p>
+          </div>
         </div>
         <p className="rounded-full bg-pink px-4 py-1.5 text-sm font-black text-white">
           {isFinalRound && "⚡ Tour final — "}
@@ -124,7 +134,7 @@ export function GameActive({
                 guessMode ? (
                   <div className="flex flex-col gap-3">
                     <p className="text-center text-sm font-bold text-pink-dark">
-                      Choisis le personnage que tu penses être ta cible :
+                      Tu penses savoir qui est {myTargetName} ? Choisis son personnage :
                     </p>
                     <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
                       {characters.map((c) => (
@@ -175,7 +185,7 @@ export function GameActive({
                       onClick={() => setGuessMode(true)}
                       className="self-center rounded-full bg-pink px-5 py-2 text-sm font-black text-white shadow-[0_3px_0_var(--pink-dark)]"
                     >
-                      🎯 Deviner mon personnage cible
+                      🎯 Deviner qui est {myTargetName}
                     </button>
                   </div>
                 )
@@ -238,7 +248,7 @@ export function GameActive({
               (isMyTurn ? (
                 <div className="flex flex-col gap-3">
                   <p className="text-center text-sm font-black text-pink-dark">
-                    ⚡ Dernière chance ! Devine le personnage de ta cible.
+                    ⚡ Dernière chance ! Devine qui est {myTargetName}.
                   </p>
                   <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
                     {characters.map((c) => (
