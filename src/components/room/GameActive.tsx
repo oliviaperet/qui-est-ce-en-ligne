@@ -316,7 +316,7 @@ export function GameActive({
         </section>
 
         {/* 4. Le chat */}
-        <div className="order-3 min-h-[280px] flex-1">
+        <div className="order-3">
           <MessageLog
             messages={messages}
             playersById={playersById}

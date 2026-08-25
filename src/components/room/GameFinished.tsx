@@ -120,7 +120,7 @@ export function GameFinished({
         </ul>
       </section>
 
-      <div className="h-64">
+      <div>
         <MessageLog
           messages={messages}
           playersById={playersById}

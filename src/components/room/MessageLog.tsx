@@ -81,8 +81,18 @@ export function MessageLog({
   }
 
   return (
-    <div className="game-card flex h-full flex-col border-blue">
-      <div className="flex-1 space-y-2 overflow-y-auto p-3">
+    <div className="game-card relative flex h-[440px] flex-col overflow-hidden border-blue">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/chat-cat.png"
+        alt=""
+        className="pointer-events-none absolute bottom-0 left-1/2 w-56 -translate-x-1/2 opacity-15"
+        style={{
+          maskImage: "linear-gradient(to top, black 20%, transparent 85%)",
+          WebkitMaskImage: "linear-gradient(to top, black 20%, transparent 85%)",
+        }}
+      />
+      <div className="relative z-10 flex-1 space-y-2 overflow-y-auto p-3">
         {messages.length === 0 && (
           <p className="text-center text-sm text-blue-dark/50">Aucun message pour le moment.</p>
         )}
@@ -92,7 +102,10 @@ export function MessageLog({
         <div ref={bottomRef} />
       </div>
       {onSendChat && (
-        <form onSubmit={handleSubmit} className="flex gap-2 border-t-2 border-blue-tint p-2">
+        <form
+          onSubmit={handleSubmit}
+          className="relative z-10 flex gap-2 border-t-2 border-blue-tint bg-white p-2"
+        >
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
