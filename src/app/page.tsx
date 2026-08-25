@@ -84,7 +84,7 @@ export default function HomePage() {
           <img
             src="/brand/title.png"
             alt="Bonne Gueule"
-            className="mx-auto w-[85%] max-w-md sm:max-w-lg"
+            className="mx-auto w-full max-w-xl sm:max-w-2xl"
           />
           <p className="mt-4 font-bold text-ink/70">
             Importez vos photos, créez un salon, et devinez qui se cache derrière chaque bonne
