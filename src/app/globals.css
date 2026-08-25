@@ -7,9 +7,11 @@
   --pink: #ec2f8c;
   --pink-dark: #c4157a;
   --pink-tint: #ffe1f1;
-  --blue: #2f8cf0;
-  --blue-dark: #1a63c4;
-  --blue-tint: #dcedff;
+  --blue: #8b93f2;
+  --blue-dark: #5a63d8;
+  --blue-tint: #e8e9fd;
+  --hero-pink: #f6b9e3;
+  --ink: #211a2e;
 }
 
 @theme inline {
@@ -22,6 +24,8 @@
   --color-blue: var(--blue);
   --color-blue-dark: var(--blue-dark);
   --color-blue-tint: var(--blue-tint);
+  --color-hero-pink: var(--hero-pink);
+  --color-ink: var(--ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Qui est-ce ? en ligne",
-  description: "Le Qui est-ce ? personnalisé à jouer en ligne avec vos amis.",
+  title: "Bonne Gueule",
+  description: "Le jeu des bonnes gueules : importez vos photos et devinez qui se cache derrière chaque visage, entre amis.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
