@@ -63,13 +63,15 @@ export default function HomePage() {
         alt=""
         className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-64 opacity-25 sm:w-80"
       />
-      <div className="pointer-events-none absolute -right-4 -top-6 flex w-[62%] max-w-md rotate-180 gap-0 sm:w-[46%]">
+      <div className="pointer-events-none absolute -right-4 -top-6 flex w-[78%] max-w-lg rotate-180 gap-0 sm:w-[58%]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-star.png" alt="" className="w-1/3" />
+        <img src="/brand/face-star.png" alt="" className="w-1/4" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-glasses.png" alt="" className="w-1/3" />
+        <img src="/brand/face-glasses.png" alt="" className="w-1/4" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-cap.png" alt="" className="w-1/3" />
+        <img src="/brand/face-cap.png" alt="" className="w-1/4" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-1.png" alt="" className="w-1/4" />
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -77,6 +79,12 @@ export default function HomePage() {
         alt=""
         className="pointer-events-none absolute -bottom-8 -left-8 w-[55%] max-w-xs sm:w-[40%]"
       />
+      <div className="pointer-events-none absolute -right-4 bottom-6 flex w-[45%] max-w-[220px] gap-0 sm:w-[32%]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-2.png" alt="" className="w-1/2" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-3.png" alt="" className="w-1/2" />
+      </div>
 
       <div className="relative mx-auto w-full max-w-5xl px-4 pt-24 text-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
