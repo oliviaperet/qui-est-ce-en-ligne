@@ -161,24 +161,18 @@ export function GameActive({
 
       <div className="order-1 flex flex-col gap-4 lg:order-2">
         {/* 2. Ton personnage */}
-        <section className="game-card flex items-center gap-3 border-pink p-4">
+        <section className="game-card border-pink p-4">
+          <p className="mb-2 text-center text-xs font-bold uppercase tracking-wide text-pink-dark/70">
+            Ton personnage
+          </p>
           {myIdentityCharacter && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={myIdentityCharacter.image_path}
-              alt={myIdentityCharacter.name}
-              className="h-14 w-14 rounded-full border-4 border-amber-400 object-cover"
-            />
+            <div className="mx-auto w-32 sm:w-40">
+              <CharacterThumb character={myIdentityCharacter} highlighted badge="TOI" />
+            </div>
           )}
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-pink-dark/70">
-              Ton personnage
-            </p>
-            <p className="font-black text-pink-dark">{myIdentityCharacter?.name ?? "…"}</p>
-            <p className="text-xs font-bold text-blue-dark/50">
-              {mySolvedPlayerIds.size} / {otherPlayers.length} démasqués
-            </p>
-          </div>
+          <p className="mt-2 text-center text-xs font-bold text-blue-dark/50">
+            {mySolvedPlayerIds.size} / {otherPlayers.length} démasqués
+          </p>
         </section>
 
         {/* 3. La question / la cible */}
