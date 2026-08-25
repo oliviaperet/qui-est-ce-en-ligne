@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { FaceCap, FaceCurly, FaceGrin, FaceStar } from "@/components/doodles/Faces";
 
 export function JoinForm({
   code,
@@ -29,10 +28,11 @@ export function JoinForm({
 
   return (
     <div className="relative flex-1 overflow-hidden bg-hero-pink">
-      <div className="pointer-events-none absolute -right-6 -top-8 flex w-[55%] max-w-xs -rotate-180 gap-1">
-        <FaceStar className="w-1/3" />
-        <FaceGrin className="w-1/3" />
-        <FaceCap className="w-1/3" />
+      <div className="pointer-events-none absolute -right-4 -top-6 flex w-[58%] max-w-xs rotate-180 gap-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-star.png" alt="" className="w-1/2" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-cap.png" alt="" className="w-1/2" />
       </div>
       <main className="relative mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-6 px-4 py-24">
         <div className="text-center">
@@ -57,7 +57,8 @@ export function JoinForm({
           </button>
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
         </form>
-        <FaceCurly className="pointer-events-none w-16 opacity-70" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-1.png" alt="" className="pointer-events-none w-24 opacity-80" />
       </main>
     </div>
   );

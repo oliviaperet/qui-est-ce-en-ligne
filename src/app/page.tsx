@@ -6,8 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuthUserId } from "@/lib/session";
 import { createRoom, joinRoom } from "@/lib/game";
 import { saveRoomIdentity } from "@/lib/roomStorage";
-import { FaceAfro, FaceCap, FaceCurly, FaceGrin, FaceStar, FaceWavy } from "@/components/doodles/Faces";
-import { FlowerDaisy, FlowerFive, FlowerSpiky } from "@/components/doodles/Flowers";
 
 export default function HomePage() {
   const router = useRouter();
@@ -59,31 +57,35 @@ export default function HomePage() {
 
   return (
     <div className="relative flex-1 overflow-hidden bg-hero-pink">
-      <div className="pointer-events-none absolute -right-6 -top-8 flex w-[60%] max-w-md -rotate-180 gap-1 sm:w-[45%]">
-        <FaceStar className="w-1/4" />
-        <FaceCurly className="w-1/4" />
-        <FaceCap className="w-1/4" />
-        <FaceGrin className="w-1/4" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/flowers.png"
+        alt=""
+        className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-64 opacity-25 sm:w-80"
+      />
+      <div className="pointer-events-none absolute -right-4 -top-6 flex w-[62%] max-w-md rotate-180 gap-0 sm:w-[46%]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-star.png" alt="" className="w-1/3" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-glasses.png" alt="" className="w-1/3" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/face-cap.png" alt="" className="w-1/3" />
       </div>
-      <div className="pointer-events-none absolute -bottom-6 -left-6 flex w-[65%] max-w-lg gap-1 sm:w-[50%]">
-        <FaceWavy className="w-1/3" />
-        <FaceAfro className="w-1/3" />
-        <FaceCurly className="w-1/3 -scale-x-100" />
-      </div>
-
-      <div className="pointer-events-none absolute inset-x-0 top-16 flex justify-center gap-4 opacity-30 sm:top-10">
-        <FlowerFive className="w-10 translate-y-6" />
-        <FlowerDaisy className="w-12" />
-        <FlowerSpiky className="w-9 translate-y-8" />
-        <FlowerFive className="w-14 translate-y-2" />
-        <FlowerDaisy className="hidden w-10 translate-y-10 sm:block" />
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/faces-grid.png"
+        alt=""
+        className="pointer-events-none absolute -bottom-8 -left-8 w-[55%] max-w-xs sm:w-[40%]"
+      />
 
       <main className="relative mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-10 px-4 py-24">
         <div className="text-center">
-          <h1 className="text-6xl font-black uppercase tracking-tight text-blue sm:text-7xl">
-            Bonne Gueule
-          </h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/title.png"
+            alt="Bonne Gueule"
+            className="mx-auto w-[85%] max-w-md sm:max-w-lg"
+          />
           <p className="mt-4 font-bold text-ink/70">
             Importez vos photos, créez un salon, et devinez qui se cache derrière chaque bonne
             gueule.
