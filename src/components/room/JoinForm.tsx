@@ -27,17 +27,11 @@ export function JoinForm({
   }
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-hero-pink">
-      <div className="pointer-events-none absolute -right-4 -top-6 flex w-[58%] max-w-xs rotate-180 gap-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-star.png" alt="" className="w-1/2" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-cap.png" alt="" className="w-1/2" />
-      </div>
+    <div className="relative flex-1 overflow-hidden bg-hero-pink bg-[url(/brand/moodboard-2.png)] bg-cover bg-top bg-no-repeat">
       <main className="relative mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-6 px-4 py-24">
-        <div className="text-center">
+        <div className="rounded-2xl bg-white/70 px-4 py-2 text-center backdrop-blur-sm">
           <p className="text-sm font-black uppercase tracking-widest text-pink-dark">Salon {code}</p>
-          <h1 className="mt-2 text-3xl font-black uppercase text-blue">Rejoindre la partie</h1>
+          <h1 className="mt-1 text-3xl font-black uppercase text-blue">Rejoindre la partie</h1>
         </div>
         <form onSubmit={handleSubmit} className="game-card flex w-full flex-col gap-4 p-6">
           <input
@@ -57,8 +51,6 @@ export function JoinForm({
           </button>
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
         </form>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/face-1.png" alt="" className="pointer-events-none w-24 opacity-80" />
       </main>
     </div>
   );
