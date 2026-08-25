@@ -230,6 +230,13 @@ export function Lobby({
           {error}
         </p>
       )}
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/moodboard.png"
+        alt="Aller chop chop chop"
+        className="pointer-events-none mx-auto mt-6 w-full max-w-2xl"
+      />
     </main>
   );
 }
