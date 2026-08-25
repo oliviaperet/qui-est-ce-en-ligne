@@ -102,43 +102,31 @@ export function GameFinished({
       </div>
 
       <section className="game-card border-blue p-4">
-        <h2 className="mb-3 font-black text-blue-dark">Toutes les identités</h2>
-        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <h2 className="mb-4 text-center font-black text-blue-dark">Toutes les identités</h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {players.map((p) => {
             const character = charactersById[identitiesByPlayerId[p.id]];
-            const solved = [...(solvesByPlayerId[p.id] ?? [])]
+            const solvedNames = [...(solvesByPlayerId[p.id] ?? [])]
               .map((id) => playersById[id]?.name)
               .filter(Boolean);
             const isWinner = winnerIds.includes(p.id);
             return (
-              <li
-                key={p.id}
-                className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2 text-sm ${
-                  isWinner ? "border-amber-400 bg-amber-50" : "border-blue-tint bg-white"
-                }`}
-              >
+              <div key={p.id} className="flex flex-col items-center gap-1.5">
                 {character && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={character.image_path}
-                    alt={character.name}
-                    className="h-8 w-8 rounded-full border-2 border-blue object-cover"
-                  />
+                  <div className="w-full max-w-[130px]">
+                    <CharacterThumb character={character} highlighted={isWinner} badge={isWinner ? "🏆" : undefined} />
+                  </div>
                 )}
-                <span>
-                  <span className="font-bold">{p.name}</span> était{" "}
-                  <span className="font-bold text-pink-dark">{character?.name ?? "?"}</span>
-                  {solved.length > 0 && (
-                    <>
-                      {" "}
-                      · a démasqué <span className="font-bold">{solved.join(", ")}</span>
-                    </>
-                  )}
-                </span>
-              </li>
+                <p className="font-black text-pink-dark">{p.name}</p>
+                {solvedNames.length > 0 && (
+                  <p className="text-center text-xs font-bold text-blue-dark/60">
+                    a démasqué {solvedNames.join(", ")}
+                  </p>
+                )}
+              </div>
             );
           })}
-        </ul>
+        </div>
       </section>
 
       <div>
