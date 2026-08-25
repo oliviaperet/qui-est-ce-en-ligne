@@ -57,11 +57,6 @@ export function CharacterThumb({
           </button>
         )}
       </div>
-      {character.name && (
-        <p className="truncate bg-pink-tint px-2 py-1 text-xs font-bold text-blue-dark">
-          {character.name}
-        </p>
-      )}
     </Tag>
   );
 }
