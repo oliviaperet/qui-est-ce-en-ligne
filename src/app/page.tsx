@@ -55,37 +55,10 @@ export default function HomePage() {
 
   const ready = Boolean(userId);
 
-  const scatter: { src: string; className: string }[] = [
-    { src: "face-cap", className: "top-[-8%] left-[-6%] w-40 rotate-[12deg] sm:w-52" },
-    { src: "flowers", className: "top-[-4%] left-[16%] w-40 rotate-[-8deg] opacity-30 sm:w-56" },
-    { src: "face-star", className: "top-[-6%] right-[26%] w-32 rotate-[168deg] sm:w-40" },
-    { src: "face-glasses", className: "top-[-8%] right-[2%] w-40 rotate-[188deg] sm:w-52" },
-    { src: "face-1", className: "top-[3%] right-[42%] w-28 rotate-[172deg] sm:w-36" },
-    { src: "flowers", className: "top-[6%] right-[-6%] w-44 rotate-[15deg] opacity-25 sm:w-56" },
-    { src: "face-3", className: "top-[20%] left-[-8%] w-36 rotate-[-10deg] sm:w-44" },
-    { src: "face-2", className: "top-[18%] right-[-5%] w-36 rotate-[9deg] sm:w-44" },
-    { src: "flowers", className: "top-[30%] left-[6%] w-36 rotate-[204deg] opacity-20 sm:w-44" },
-    { src: "face-glasses", className: "top-[36%] right-[-4%] w-40 rotate-[-16deg] sm:w-48" },
-    { src: "face-star", className: "top-[42%] left-[-6%] w-32 rotate-[22deg] sm:w-40" },
-    { src: "faces-grid", className: "bottom-[-6%] left-[-8%] w-64 rotate-[-6deg] sm:w-80" },
-    { src: "face-cap", className: "bottom-[-4%] right-[-4%] w-40 rotate-[10deg] sm:w-48" },
-    { src: "face-star", className: "bottom-[8%] right-[18%] w-32 rotate-[-12deg] sm:w-40" },
-    { src: "flowers", className: "bottom-[4%] left-[32%] w-40 rotate-[5deg] opacity-25 sm:w-52" },
-    { src: "face-1", className: "bottom-[20%] left-[-6%] w-32 rotate-[15deg] sm:w-40" },
-  ];
-
   return (
-    <div className="relative flex-1 overflow-hidden bg-hero-pink">
-      {scatter.map((d, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={i}
-          src={`/brand/${d.src}.png`}
-          alt=""
-          className={`pointer-events-none absolute ${d.className}`}
-        />
-      ))}
-
+    <div
+      className="relative flex-1 overflow-hidden bg-hero-pink bg-[url(/brand/moodboard-2.png)] bg-cover bg-top bg-no-repeat"
+    >
       <div className="relative mx-auto w-full max-w-5xl px-4 pt-24 text-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/brand/title.png" alt="Bonne Gueule" className="mx-auto w-full" />
