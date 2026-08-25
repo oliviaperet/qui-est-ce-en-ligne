@@ -6,7 +6,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 import type { CharacterRow, Message, Player, Room } from "@/lib/useRoomState";
 import { restartGame, sendChatMessage } from "@/lib/game";
+import { CharacterThumb } from "./CharacterThumb";
 import { MessageLog } from "./MessageLog";
+
+const PODIUM_ORDER = [2, 1, 3] as const;
+const PODIUM_HEIGHT: Record<number, string> = { 1: "h-56", 2: "h-40", 3: "h-32" };
 
 export function GameFinished({
   supabase,
@@ -40,7 +44,14 @@ export function GameFinished({
   );
 
   const winnerIds = room.winner_player_ids ?? [];
-  const winners = winnerIds.map((id) => playersById[id]).filter(Boolean);
+
+  const ranked = useMemo(
+    () =>
+      [...players]
+        .sort((a, b) => (solvesByPlayerId[b.id]?.size ?? 0) - (solvesByPlayerId[a.id]?.size ?? 0))
+        .slice(0, 3),
+    [players, solvesByPlayerId]
+  );
 
   async function handleRestart() {
     setRestarting(true);
@@ -55,29 +66,39 @@ export function GameFinished({
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-10">
-      <div className="game-card flex flex-col items-center gap-3 border-amber-400 bg-amber-50 p-6 text-center shadow-[0_4px_0_#d97706]">
-        <div className="flex flex-wrap justify-center gap-3">
-          {winners.map((w) => {
-            const character = charactersById[identitiesByPlayerId[w.id]];
-            return (
-              <div key={w.id} className="flex flex-col items-center">
-                {character && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={character.image_path}
-                    alt={character.name}
-                    className="h-16 w-16 rounded-full border-4 border-amber-400 object-cover"
-                  />
-                )}
-                <p className="mt-1 text-sm font-black text-amber-800">{w.name}</p>
+      <div className="text-center">
+        <h1 className="text-2xl font-black text-pink-dark">🏆 Podium</h1>
+      </div>
+      <div className="flex items-end justify-center gap-3">
+        {PODIUM_ORDER.map((rank) => {
+          const player = ranked[rank - 1];
+          const solvedCharacters = player
+            ? [...(solvesByPlayerId[player.id] ?? [])]
+                .map((id) => charactersById[identitiesByPlayerId[id]])
+                .filter(Boolean)
+            : [];
+
+          return (
+            <div key={rank} className="flex w-28 flex-col items-center gap-2 sm:w-36">
+              {solvedCharacters.length > 0 ? (
+                <div className="flex flex-wrap justify-center gap-1">
+                  {solvedCharacters.map((c) => (
+                    <div key={c.id} className="w-12 sm:w-14">
+                      <CharacterThumb character={c} highlighted={rank === 1} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="h-12" />
+              )}
+              <div
+                className={`flex w-full items-end justify-center rounded-2xl border-[3px] border-pink bg-pink-tint pb-3 shadow-[0_4px_0_var(--pink)] ${PODIUM_HEIGHT[rank]}`}
+              >
+                <span className="text-4xl font-black text-pink-dark/60">{rank}</span>
               </div>
-            );
-          })}
-        </div>
-        <h1 className="text-2xl font-black text-amber-800">
-          🏆 {winners.map((w) => w.name).join(" et ") || "?"} remporte{winners.length > 1 ? "nt" : ""} la
-          partie !
-        </h1>
+            </div>
+          );
+        })}
       </div>
 
       <section className="game-card border-blue p-4">
