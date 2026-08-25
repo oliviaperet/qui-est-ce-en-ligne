@@ -78,20 +78,16 @@ export default function HomePage() {
         className="pointer-events-none absolute -bottom-8 -left-8 w-[55%] max-w-xs sm:w-[40%]"
       />
 
-      <main className="relative mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-10 px-4 py-24">
-        <div className="text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/title.png"
-            alt="Bonne Gueule"
-            className="mx-auto w-full max-w-xl sm:max-w-2xl"
-          />
-          <p className="mt-4 font-bold text-ink/70">
-            Importez vos photos, créez un salon, et devinez qui se cache derrière chaque bonne
-            gueule.
-          </p>
-        </div>
+      <div className="relative mx-auto w-full max-w-5xl px-4 pt-24 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/title.png" alt="Bonne Gueule" className="mx-auto w-full" />
+        <p className="mt-4 font-bold text-ink/70">
+          Importez vos photos, créez un salon, et devinez qui se cache derrière chaque bonne
+          gueule.
+        </p>
+      </div>
 
+      <main className="relative mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-10 px-4 pb-24 pt-10">
         <div className="grid w-full gap-6 sm:grid-cols-2">
           <form
             onSubmit={handleCreate}
